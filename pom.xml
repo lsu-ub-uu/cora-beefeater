@@ -19,7 +19,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<testng.version>6.8.8</testng.version>
-		<metadataformat.version>0.1-SNAPSHOT</metadataformat.version>
 	</properties>
 
 	<repositories>
@@ -48,11 +47,6 @@
 		</repository>
 	</repositories>
 	<dependencies>
-		<dependency>
-			<groupId>epc.metadataformat</groupId>
-			<artifactId>metadataformat</artifactId>
-			<version>${metadataformat.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
