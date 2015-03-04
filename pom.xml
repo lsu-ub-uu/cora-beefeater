@@ -7,8 +7,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>beefeater</name>
-	<url>http://maven.apache.org</url>
+	<name>Beefeater</name>
 
 	<parent>
 		<groupId>epc.commons</groupId>
@@ -20,6 +19,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<testng.version>6.8.8</testng.version>
 	</properties>
+	
+	<scm>
+		<connection>scm:git:https://git.epc.ub.uu.se/epc/beefeater.git</connection>
+		<developerConnection>scm:git:https://git.epc.ub.uu.se/epc/beefeater.git</developerConnection>
+		<url>https://git.epc.ub.uu.se/epc/beefeater.git</url>
+	</scm>
 
 	<repositories>
 		<repository>
