@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 public class AuthorizationInputBoundaryTest {
 	@Test
 	public void testInit() {
-		AuthorizationInputBoundary authorizator = new Authorizator();
+		Authorizator authorizator = new AuthorizatorImp();
 		Set<String> permissionKeys = new HashSet<>();
 		permissionKeys.add("READ:PLACE:SYSTEM:UU:UUB");
 		boolean authorized = authorizator
@@ -20,7 +20,7 @@ public class AuthorizationInputBoundaryTest {
 	}
 	@Test
 	public void testUnauthorizedUser() {
-		AuthorizationInputBoundary authorizator = new Authorizator();
+		Authorizator authorizator = new AuthorizatorImp();
 		Set<String> permissionKeys = new HashSet<>();
 		permissionKeys.add("READ:PLACE:SYSTEM:UU:UUB");
 		boolean authorized = authorizator

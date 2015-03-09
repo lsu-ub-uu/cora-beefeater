@@ -2,7 +2,7 @@ package epc.beefeater;
 
 import java.util.Set;
 
-public class Authorizator implements AuthorizationInputBoundary {
+public class AuthorizatorImp implements Authorizator {
 
 	@Override
 	public boolean isAuthorized(String userId, Set<String> permissionKey) {
