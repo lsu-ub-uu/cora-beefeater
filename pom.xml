@@ -1,62 +1,82 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>epc.beefeater</groupId>
-	<artifactId>beefeater</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
-	<name>Beefeater</name>
-
-	<parent>
-		<groupId>epc.commons</groupId>
-		<artifactId>master-pom</artifactId>
-		<version>1.8-SNAPSHOT</version>
-	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<testng.version>6.8.8</testng.version>
-	</properties>
-	
-	<scm>
-		<connection>scm:git:https://git.epc.ub.uu.se/epc/beefeater.git</connection>
-		<developerConnection>scm:git:https://git.epc.ub.uu.se/epc/beefeater.git</developerConnection>
-		<url>https://git.epc.ub.uu.se/epc/beefeater.git</url>
-	</scm>
-
-	<repositories>
-		<repository>
-			<id>epc-release</id>
-			<name>EPC Nexus Release Repository</name>
-			<url>http://epc.ub.uu.se/nexus/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>epc-snapshot</id>
-			<name>EPC Nexus Snapshot Repository</name>
-			<url>http://epc.ub.uu.se/nexus/content/groups/public-snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>daily</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${testng.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>epc.beefeater</groupId>
+    <artifactId>beefeater</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Beefeater</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <compile.source>1.8</compile.source>
+        <sonar-plugin.version>2.6</sonar-plugin.version>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <testng.version>6.8.8</testng.version>
+    </properties>
+    <scm>
+        <connection>scm:git:https://git.epc.ub.uu.se/epc/beefeater.git</connection>
+        <developerConnection>scm:git:https://git.epc.ub.uu.se/epc/beefeater.git</developerConnection>
+        <url>https://git.epc.ub.uu.se/epc/beefeater.git</url>
+    </scm>
+    <repositories>
+        <repository>
+            <id>epc-release</id>
+            <name>EPC Nexus Release Repository</name>
+            <url>http://epc.ub.uu.se/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>epc-snapshot</id>
+            <name>EPC Nexus Snapshot Repository</name>
+            <url>http://epc.ub.uu.se/nexus/content/groups/public-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <updatePolicy>daily</updatePolicy>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${compile.source}</source>
+                    <target>${compile.source}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${sonar-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
