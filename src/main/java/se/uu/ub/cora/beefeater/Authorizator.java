@@ -1,4 +1,4 @@
-package epc.beefeater;
+package se.uu.ub.cora.beefeater;
 
 import java.util.Set;
 

@@ -1,10 +1,13 @@
-package epc.beefeater;
+package se.uu.ub.cora.beefeater;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import se.uu.ub.cora.beefeater.Authorizator;
+import se.uu.ub.cora.beefeater.AuthorizatorImp;
 
 public class AuthorizationInputBoundaryTest {
 	@Test
