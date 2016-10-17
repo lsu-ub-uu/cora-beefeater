@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Uppsala University Library
+ * Copyright 2016 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -17,14 +17,30 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.beefeater;
+package se.uu.ub.cora.beefeater.authentication;
 
-import java.util.Set;
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
 
 import se.uu.ub.cora.beefeater.authentication.User;
 
-public interface Authorizator {
+public class UserTest {
+	@Test
+	public void init() {
+		String id = "someUserId";
+		User user = new User(id);
+		assertEquals(user.id, "someUserId");
+	}
 
-	boolean isAuthorized(User user, Set<String> recordCalculateKeys);
-
+	@Test
+	public void testLoginInfo() {
+		String id = "122345";
+		User user = new User(id);
+		user.loginId = "someUserId";
+		user.loginDomain = "someDomain";
+		assertEquals(user.id, "122345");
+		assertEquals(user.loginId, "someUserId");
+		assertEquals(user.loginDomain, "someDomain");
+	}
 }

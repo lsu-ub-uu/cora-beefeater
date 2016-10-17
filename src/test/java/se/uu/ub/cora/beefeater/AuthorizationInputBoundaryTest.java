@@ -25,27 +25,32 @@ import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.beefeater.authentication.User;
+
 public class AuthorizationInputBoundaryTest {
 	@Test
 	public void testInit() {
 		Authorizator authorizator = new AuthorizatorImp();
 		Set<String> permissionKeys = new HashSet<>();
 		permissionKeys.add("READ:PLACE:SYSTEM:UU:UUB");
-		boolean authorized = authorizator
-				.isAuthorized("userId", permissionKeys);
 
-		Assert.assertTrue(authorized,
-				"userId should be authorized to use permissionKey");
+		User user = new User("122222");
+		user.loginId = "someAuthorizedUserId";
+		boolean authorized = authorizator.isAuthorized(user, permissionKeys);
+
+		Assert.assertTrue(authorized, "userId should be authorized to use permissionKey");
 	}
+
 	@Test
 	public void testUnauthorizedUser() {
 		Authorizator authorizator = new AuthorizatorImp();
 		Set<String> permissionKeys = new HashSet<>();
 		permissionKeys.add("READ:PLACE:SYSTEM:UU:UUB");
-		boolean authorized = authorizator
-				.isAuthorized("unauthorizedUserId", permissionKeys);
-		
-		Assert.assertFalse(authorized,
-				"userId should be authorized to use permissionKey");
+
+		User user = new User("122222");
+		user.loginId = "unauthorizedUserId";
+		boolean authorized = authorizator.isAuthorized(user, permissionKeys);
+
+		Assert.assertFalse(authorized, "userId should be authorized to use permissionKey");
 	}
 }
