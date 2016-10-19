@@ -21,16 +21,18 @@ package se.uu.ub.cora.beefeater;
 
 import java.util.Set;
 
+import se.uu.ub.cora.beefeater.authentication.User;
+
 public class AuthorizatorImp implements Authorizator {
 
 	@Override
-	public boolean isAuthorized(String userId, Set<String> permissionKey) {
-		
-		//THIS IS A TEMPORARY HACK TO BE ENABLE TESTING OF UNAUTHORIZED ACCESS
-		if("unauthorizedUserId".equals(userId)){
+	public boolean isAuthorized(User user, Set<String> permissionKey) {
+
+		// THIS IS A TEMPORARY HACK TO BE ENABLE TESTING OF UNAUTHORIZED ACCESS
+		if ("unauthorizedUserId".equals(user.loginId)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

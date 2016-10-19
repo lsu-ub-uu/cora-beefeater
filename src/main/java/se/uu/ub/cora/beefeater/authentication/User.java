@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Uppsala University Library
+ * Copyright 2016 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -17,14 +17,16 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.beefeater;
+package se.uu.ub.cora.beefeater.authentication;
 
-import java.util.Set;
+public class User {
 
-import se.uu.ub.cora.beefeater.authentication.User;
+	public final String id;
+	public String loginId;
+	public String loginDomain;
 
-public interface Authorizator {
-
-	boolean isAuthorized(User user, Set<String> recordCalculateKeys);
+	public User(String id) {
+		this.id = id;
+	}
 
 }
