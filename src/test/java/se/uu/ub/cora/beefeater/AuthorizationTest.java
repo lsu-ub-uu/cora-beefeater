@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.beefeater.authentication.User;
 
-public class AuthorizationInputBoundaryTest {
+public class AuthorizationTest {
 	private List<Map<String, Set<String>>> providedRules;
 	private List<Map<String, Set<String>>> requiredRules;
 	private Authorizator authorizator;

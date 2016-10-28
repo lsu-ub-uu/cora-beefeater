@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Uppsala University Library
+ * Copyright 2015, 2016 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -29,7 +29,6 @@ public interface Authorizator {
 
 	boolean isAuthorized(User user, Set<String> recordCalculateKeys);
 
-	boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> userRules,
-			List<Map<String, Set<String>>> dataRules);
-
+	boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
+			List<Map<String, Set<String>>> requiredRules);
 }

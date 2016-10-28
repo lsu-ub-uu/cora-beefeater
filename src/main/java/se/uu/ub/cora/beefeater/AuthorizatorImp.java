@@ -45,9 +45,15 @@ public class AuthorizatorImp implements Authorizator {
 		if (requiredRules.isEmpty()) {
 			return true;
 		}
-		return requiredRules.stream()
-				.anyMatch(map -> providedRulesSatisfiesRequiredRule(map, providedRules));
+		return providedRulesSatisfiesExistingRequiredRules(providedRules, requiredRules);
 
+	}
+
+	private boolean providedRulesSatisfiesExistingRequiredRules(
+			List<Map<String, Set<String>>> providedRules,
+			List<Map<String, Set<String>>> requiredRules) {
+		return requiredRules.stream().anyMatch(
+				requiredRule -> providedRulesSatisfiesRequiredRule(requiredRule, providedRules));
 	}
 
 	private boolean providedRulesSatisfiesRequiredRule(Map<String, Set<String>> requiredRule,
@@ -65,11 +71,16 @@ public class AuthorizatorImp implements Authorizator {
 	private boolean providedRuleSatisfiesRequiredPart(Map<String, Set<String>> providedRule,
 			Entry<String, Set<String>> requiredPart) {
 		String key = requiredPart.getKey();
-		Set<String> requiredValues = requiredPart.getValue();
-		Set<String> providedValues = providedRule.get(key);
-		if (providedValues == null) {
+		if (!providedRule.containsKey(key)) {
 			return false;
 		}
+		Set<String> requiredValues = requiredPart.getValue();
+		Set<String> providedValues = providedRule.get(key);
+		return providedExistingValuesSatisfiesRequiredValue(requiredValues, providedValues);
+	}
+
+	private boolean providedExistingValuesSatisfiesRequiredValue(Set<String> requiredValues,
+			Set<String> providedValues) {
 		return requiredValues.stream()
 				.allMatch(requiredValue -> providedValuesSatisfiesRequiredValue(providedValues,
 						requiredValue));
