@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Uppsala University Library
+ * Copyright 2015, 2016 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -19,6 +19,9 @@
 
 package se.uu.ub.cora.beefeater;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import se.uu.ub.cora.beefeater.authentication.User;
@@ -34,6 +37,64 @@ public class AuthorizatorImp implements Authorizator {
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
+			List<Map<String, Set<String>>> requiredRules) {
+		if (requiredRules.isEmpty()) {
+			return true;
+		}
+		return providedRulesSatisfiesExistingRequiredRules(providedRules, requiredRules);
+
+	}
+
+	private boolean providedRulesSatisfiesExistingRequiredRules(
+			List<Map<String, Set<String>>> providedRules,
+			List<Map<String, Set<String>>> requiredRules) {
+		return requiredRules.stream().anyMatch(
+				requiredRule -> providedRulesSatisfiesRequiredRule(requiredRule, providedRules));
+	}
+
+	private boolean providedRulesSatisfiesRequiredRule(Map<String, Set<String>> requiredRule,
+			List<Map<String, Set<String>>> providedRules) {
+		return providedRules.stream().anyMatch(
+				providedRule -> providedRuleSatisfiesRequiredRule(providedRule, requiredRule));
+	}
+
+	private boolean providedRuleSatisfiesRequiredRule(Map<String, Set<String>> providedRule,
+			Map<String, Set<String>> requiredRule) {
+		return requiredRule.entrySet().stream().allMatch(
+				requiredPart -> providedRuleSatisfiesRequiredPart(providedRule, requiredPart));
+	}
+
+	private boolean providedRuleSatisfiesRequiredPart(Map<String, Set<String>> providedRule,
+			Entry<String, Set<String>> requiredPart) {
+		String key = requiredPart.getKey();
+		if (!providedRule.containsKey(key)) {
+			return false;
+		}
+		Set<String> requiredValues = requiredPart.getValue();
+		Set<String> providedValues = providedRule.get(key);
+		return providedExistingValuesSatisfiesRequiredValue(requiredValues, providedValues);
+	}
+
+	private boolean providedExistingValuesSatisfiesRequiredValue(Set<String> requiredValues,
+			Set<String> providedValues) {
+		return requiredValues.stream()
+				.allMatch(requiredValue -> providedValuesSatisfiesRequiredValue(providedValues,
+						requiredValue));
+	}
+
+	private boolean providedValuesSatisfiesRequiredValue(Set<String> providedValues,
+			String requiredValue) {
+		return providedValues.stream().anyMatch(
+				providedValue -> providedValueSatisfiesRequiredValue(providedValue, requiredValue));
+	}
+
+	private boolean providedValueSatisfiesRequiredValue(String providedValue,
+			String requiredValue) {
+		return requiredValue.startsWith(providedValue);
 	}
 
 }

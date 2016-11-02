@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2016 Uppsala University Library
+ * Copyright 2016 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -17,18 +17,14 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.beefeater;
+package se.uu.ub.cora.beefeater.authorization;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.testng.annotations.Test;
 
-import se.uu.ub.cora.beefeater.authentication.User;
+public class RuleTest {
+	@Test
+	public void test() {
+		Rule rule = new Rule();
 
-public interface Authorizator {
-
-	boolean isAuthorized(User user, Set<String> recordCalculateKeys);
-
-	boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
-			List<Map<String, Set<String>>> requiredRules);
+	}
 }

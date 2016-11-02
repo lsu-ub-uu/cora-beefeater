@@ -20,10 +20,11 @@
 package se.uu.ub.cora.beefeater.authentication;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Set;
 
 import org.testng.annotations.Test;
-
-import se.uu.ub.cora.beefeater.authentication.User;
 
 public class UserTest {
 	@Test
@@ -42,5 +43,17 @@ public class UserTest {
 		assertEquals(user.id, "122345");
 		assertEquals(user.loginId, "someUserId");
 		assertEquals(user.loginDomain, "someDomain");
+	}
+
+	@Test
+	public void testRoleSet() {
+		String id = "122345";
+		User user = new User(id);
+		user.roles.add("admin");
+		user.roles.add("guest");
+		Set<String> roles = user.roles;
+		assertEquals(roles.size(), 2);
+		assertTrue(roles.contains("guest"));
+		assertTrue(roles.contains("admin"));
 	}
 }

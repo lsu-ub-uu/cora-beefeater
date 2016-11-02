@@ -19,11 +19,15 @@
 
 package se.uu.ub.cora.beefeater.authentication;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class User {
 
 	public final String id;
 	public String loginId;
 	public String loginDomain;
+	public final Set<String> roles = new HashSet<>();
 
 	public User(String id) {
 		this.id = id;
