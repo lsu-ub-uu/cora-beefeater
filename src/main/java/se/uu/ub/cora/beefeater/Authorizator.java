@@ -23,11 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import se.uu.ub.cora.beefeater.authentication.User;
-
 public interface Authorizator {
-
-	boolean isAuthorized(User user, Set<String> recordCalculateKeys);
 
 	boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
 			List<Map<String, Set<String>>> requiredRules);

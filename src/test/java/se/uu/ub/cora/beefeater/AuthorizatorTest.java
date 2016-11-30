@@ -32,9 +32,7 @@ import java.util.TreeMap;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.beefeater.authentication.User;
-
-public class AuthorizationTest {
+public class AuthorizatorTest {
 	private List<Map<String, Set<String>>> providedRules;
 	private List<Map<String, Set<String>>> requiredRules;
 	private Authorizator authorizator;
@@ -45,32 +43,6 @@ public class AuthorizationTest {
 		providedRules = new ArrayList<Map<String, Set<String>>>();
 		requiredRules = new ArrayList<Map<String, Set<String>>>();
 
-	}
-
-	@Test
-	public void testInit() {
-		Authorizator authorizator = new AuthorizatorImp();
-		Set<String> permissionKeys = new HashSet<>();
-		permissionKeys.add("READ:PLACE:SYSTEM:UU:UUB");
-
-		User user = new User("122222");
-		user.loginId = "someAuthorizedUserId";
-		boolean authorized = authorizator.isAuthorized(user, permissionKeys);
-
-		assertTrue(authorized, "userId should be authorized to use permissionKey");
-	}
-
-	@Test
-	public void testUnauthorizedUser() {
-		Authorizator authorizator = new AuthorizatorImp();
-		Set<String> permissionKeys = new HashSet<>();
-		permissionKeys.add("READ:PLACE:SYSTEM:UU:UUB");
-
-		User user = new User("122222");
-		user.loginId = "unauthorizedUserId";
-		boolean authorized = authorizator.isAuthorized(user, permissionKeys);
-
-		assertFalse(authorized, "userId should be authorized to use permissionKey");
 	}
 
 	@Test

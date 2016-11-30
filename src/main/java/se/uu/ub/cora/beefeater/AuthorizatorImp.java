@@ -24,20 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import se.uu.ub.cora.beefeater.authentication.User;
-
 public class AuthorizatorImp implements Authorizator {
-
-	@Override
-	public boolean isAuthorized(User user, Set<String> permissionKey) {
-
-		// THIS IS A TEMPORARY HACK TO BE ENABLE TESTING OF UNAUTHORIZED ACCESS
-		if ("unauthorizedUserId".equals(user.loginId)) {
-			return false;
-		}
-
-		return true;
-	}
 
 	@Override
 	public boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
