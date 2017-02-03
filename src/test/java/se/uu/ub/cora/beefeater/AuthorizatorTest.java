@@ -205,8 +205,8 @@ public class AuthorizatorTest {
 	@Test
 	public void testSeriesExampleSatisfied() {
 		Map<String, Set<String>> providedRule = createProvidedRule();
-		createRulePart(providedRule, "action", "system.");
-		createRulePart(providedRule, "recordType", "system.");
+		createRulePart(providedRule, "action", "system.*");
+		createRulePart(providedRule, "recordType", "system.*");
 		createRulePart(providedRule, "serie", "system.se.uu.a");
 
 		Map<String, Set<String>> requiredRule = createRequiredRule();
@@ -220,9 +220,9 @@ public class AuthorizatorTest {
 	@Test
 	public void testUserIdExampleSatisfiedAdmin() {
 		Map<String, Set<String>> providedRule = createProvidedRule();
-		createRulePart(providedRule, "action", "system.");
+		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.book");
-		createRulePart(providedRule, "userId", "system.");
+		createRulePart(providedRule, "userId", "system.*");
 
 		Map<String, Set<String>> requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
@@ -235,7 +235,7 @@ public class AuthorizatorTest {
 	@Test
 	public void testUserIdExampleSatisfiedUser() {
 		Map<String, Set<String>> providedRule = createProvidedRule();
-		createRulePart(providedRule, "action", "system.");
+		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.uu.x");
 

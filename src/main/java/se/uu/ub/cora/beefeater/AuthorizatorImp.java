@@ -81,7 +81,18 @@ public class AuthorizatorImp implements Authorizator {
 
 	private boolean providedValueSatisfiesRequiredValue(String providedValue,
 			String requiredValue) {
-		return requiredValue.startsWith(providedValue);
+		if (isWildcardValue(providedValue)) {
+			return providedValueSatisfiesRequiredValueAsStartOfString(providedValue, requiredValue);
+		}
+		return requiredValue.equals(providedValue);
 	}
 
+	private boolean isWildcardValue(String providedValue) {
+		return providedValue.endsWith("*");
+	}
+
+	private boolean providedValueSatisfiesRequiredValueAsStartOfString(String providedValue,
+			String requiredValue) {
+		return requiredValue.startsWith(requiredValue.substring(0, providedValue.length() - 1));
+	}
 }
