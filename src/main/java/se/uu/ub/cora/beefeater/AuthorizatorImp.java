@@ -26,6 +26,8 @@ import java.util.Set;
 
 public class AuthorizatorImp implements Authorizator {
 
+	private static final String WILDCARD = "*";
+
 	@Override
 	public boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
 			List<Map<String, Set<String>>> requiredRules) {
@@ -88,11 +90,13 @@ public class AuthorizatorImp implements Authorizator {
 	}
 
 	private boolean isWildcardValue(String providedValue) {
-		return providedValue.endsWith("*");
+		return providedValue.endsWith(WILDCARD);
 	}
 
 	private boolean providedValueSatisfiesRequiredValueAsStartOfString(String providedValue,
 			String requiredValue) {
-		return requiredValue.startsWith(requiredValue.substring(0, providedValue.length() - 1));
+		String providedValueWithoutWildcard = providedValue.substring(0,
+				providedValue.length() - WILDCARD.length());
+		return requiredValue.startsWith(providedValueWithoutWildcard);
 	}
 }

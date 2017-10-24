@@ -116,6 +116,50 @@ public class AuthorizatorTest {
 	}
 
 	@Test
+	public void testRequiredRuleHasDifferentValueThanProvided() {
+		Map<String, Set<String>> providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.x");
+
+		Map<String, Set<String>> requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "systom.x");
+
+		assertFalse(providedRulesSatisfiesRequiredRules());
+	}
+
+	@Test
+	public void testRequiredRuleHasProvidedWildcard() {
+		Map<String, Set<String>> providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.x*");
+
+		Map<String, Set<String>> requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "system.xxx.yy");
+
+		assertTrue(providedRulesSatisfiesRequiredRules());
+	}
+
+	@Test
+	public void testRequiredRuleHasDifferentKeyThanProvidedWildcard() {
+		Map<String, Set<String>> providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart2", "system.x*");
+
+		Map<String, Set<String>> requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "system.xxx.yy");
+
+		assertFalse(providedRulesSatisfiesRequiredRules());
+	}
+
+	@Test
+	public void testRequiredRuleHasDifferentValueThanProvidedWildcard() {
+		Map<String, Set<String>> providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.x*");
+
+		Map<String, Set<String>> requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "systom.xxx.yy");
+
+		assertFalse(providedRulesSatisfiesRequiredRules());
+	}
+
+	@Test
 	public void testRequiredRuleHasOneLessPartThanProvided2() {
 		Map<String, Set<String>> providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
