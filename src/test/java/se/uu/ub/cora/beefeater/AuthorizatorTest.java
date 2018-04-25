@@ -23,38 +23,37 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.beefeater.authorization.Rule;
+import se.uu.ub.cora.beefeater.authorization.RulePartValues;
+
 public class AuthorizatorTest {
-	private List<Map<String, Set<String>>> providedRules;
-	private List<Map<String, Set<String>>> requiredRules;
+	private List<Rule> providedRules;
+	private List<Rule> requiredRules;
 	private Authorizator authorizator;
 
 	@BeforeMethod
 	public void setUp() {
 		authorizator = new AuthorizatorImp();
-		providedRules = new ArrayList<Map<String, Set<String>>>();
-		requiredRules = new ArrayList<Map<String, Set<String>>>();
+		providedRules = new ArrayList<Rule>();
+		requiredRules = new ArrayList<Rule>();
 
 	}
 
 	@Test
 	public void testExactMatch() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.read");
 		createRulePart(providedRule, "organisation", "system.se.uu");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "delete", "system.existing");
 		createRulePart(providedRule, "publish", "system.notpublished");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.read");
 		createRulePart(requiredRule, "organisation", "system.se.uu");
 		createRulePart(requiredRule, "recordType", "system.book");
@@ -66,14 +65,14 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testNoPartsMatch() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.read");
 		createRulePart(providedRule, "organisation", "system.se.uu");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "delete", "system.existing");
 		createRulePart(providedRule, "publish", "system.notpublished");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.create");
 		createRulePart(requiredRule, "organisation", "system.no");
 		createRulePart(requiredRule, "recordType", "system.person");
@@ -90,7 +89,7 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testNoRequiredRule() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
@@ -98,7 +97,7 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testNoProvidedRule() {
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
@@ -106,10 +105,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasDifferentKeyThanProvided() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart2", "system.x");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
@@ -117,10 +116,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasDifferentValueThanProvided() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "systom.x");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
@@ -128,10 +127,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasProvidedWildcard() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x*");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.xxx.yy");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
@@ -139,10 +138,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasDifferentKeyThanProvidedWildcard() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart2", "system.x*");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.xxx.yy");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
@@ -150,10 +149,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasDifferentValueThanProvidedWildcard() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x*");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "systom.xxx.yy");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
@@ -161,11 +160,11 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasOneLessPartThanProvided2() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 		createRulePart(providedRule, "rulePart2", "system.y");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
@@ -173,10 +172,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasOneMorePartThanProvided() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 		createRulePart(requiredRule, "rulePart2", "system.y");
 
@@ -185,10 +184,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testProvidedRuleHasOneMoreValueThanRequired() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.y", "system.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
@@ -196,10 +195,10 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredRuleHasOneMoreValueThanProvided() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x", "system.y");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
@@ -207,12 +206,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testProvidedHasOneMoreRuleThanRequired() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.y");
-		Map<String, Set<String>> providedRule2 = createProvidedRule();
+		Rule providedRule2 = createProvidedRule();
 		createRulePart(providedRule2, "rulePart1", "system.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
@@ -220,12 +219,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testRequiredHasOneMoreRuleThanProvided() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.y");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
-		Map<String, Set<String>> requiredRule2 = createRequiredRule();
+		Rule requiredRule2 = createRequiredRule();
 		createRulePart(requiredRule2, "rulePart1", "system.y");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
@@ -233,12 +232,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testSeriesExampleNotSatisfied() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.");
 		createRulePart(providedRule, "recordType", "system.");
 		createRulePart(providedRule, "serie", "system.se.uu.a");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "serie", "system.");
@@ -248,12 +247,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testSeriesExampleSatisfied() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.*");
 		createRulePart(providedRule, "serie", "system.se.uu.a");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "serie", "system.se.uu.a");
@@ -263,12 +262,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testUserIdExampleSatisfiedAdmin() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.*");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "userId", "system.uu.y");
@@ -278,12 +277,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testUserIdExampleSatisfiedUser() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.uu.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "userId", "system.uu.x");
@@ -293,12 +292,12 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testUserIdExampleNotSatisfiedUser() {
-		Map<String, Set<String>> providedRule = createProvidedRule();
+		Rule providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.uu.x");
 
-		Map<String, Set<String>> requiredRule = createRequiredRule();
+		Rule requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "userId", "system.uu.y");
@@ -310,21 +309,20 @@ public class AuthorizatorTest {
 		return authorizator.providedRulesSatisfiesRequiredRules(providedRules, requiredRules);
 	}
 
-	private Map<String, Set<String>> createRequiredRule() {
-		Map<String, Set<String>> requiredRule = new TreeMap<>();
+	private Rule createRequiredRule() {
+		Rule requiredRule = new Rule();
 		requiredRules.add(requiredRule);
 		return requiredRule;
 	}
 
-	private Map<String, Set<String>> createProvidedRule() {
-		Map<String, Set<String>> providedRule = new TreeMap<>();
+	private Rule createProvidedRule() {
+		Rule providedRule = new Rule();
 		providedRules.add(providedRule);
 		return providedRule;
 	}
 
-	private void createRulePart(Map<String, Set<String>> providedRule, String key,
-			String... values) {
-		Set<String> set = new HashSet<String>();
+	private void createRulePart(Rule providedRule, String key, String... values) {
+		RulePartValues set = new RulePartValues();
 		for (String value : values) {
 			set.add(value);
 		}

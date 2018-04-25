@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2016 Uppsala University Library
+ * Copyright 2015, 2016, 2018 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -20,17 +20,18 @@
 package se.uu.ub.cora.beefeater;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
+
+import se.uu.ub.cora.beefeater.authorization.Rule;
+import se.uu.ub.cora.beefeater.authorization.RulePartValues;
 
 public class AuthorizatorImp implements Authorizator {
 
 	private static final String WILDCARD = "*";
 
 	@Override
-	public boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
-			List<Map<String, Set<String>>> requiredRules) {
+	public boolean providedRulesSatisfiesRequiredRules(List<Rule> providedRules,
+			List<Rule> requiredRules) {
 		if (requiredRules.isEmpty()) {
 			return true;
 		}
@@ -38,44 +39,42 @@ public class AuthorizatorImp implements Authorizator {
 
 	}
 
-	private boolean providedRulesSatisfiesExistingRequiredRules(
-			List<Map<String, Set<String>>> providedRules,
-			List<Map<String, Set<String>>> requiredRules) {
+	private boolean providedRulesSatisfiesExistingRequiredRules(List<Rule> providedRules,
+			List<Rule> requiredRules) {
 		return requiredRules.stream().anyMatch(
 				requiredRule -> providedRulesSatisfiesRequiredRule(requiredRule, providedRules));
 	}
 
-	private boolean providedRulesSatisfiesRequiredRule(Map<String, Set<String>> requiredRule,
-			List<Map<String, Set<String>>> providedRules) {
+	private boolean providedRulesSatisfiesRequiredRule(Rule requiredRule,
+			List<Rule> providedRules) {
 		return providedRules.stream().anyMatch(
 				providedRule -> providedRuleSatisfiesRequiredRule(providedRule, requiredRule));
 	}
 
-	private boolean providedRuleSatisfiesRequiredRule(Map<String, Set<String>> providedRule,
-			Map<String, Set<String>> requiredRule) {
+	private boolean providedRuleSatisfiesRequiredRule(Rule providedRule, Rule requiredRule) {
 		return requiredRule.entrySet().stream().allMatch(
 				requiredPart -> providedRuleSatisfiesRequiredPart(providedRule, requiredPart));
 	}
 
-	private boolean providedRuleSatisfiesRequiredPart(Map<String, Set<String>> providedRule,
-			Entry<String, Set<String>> requiredPart) {
+	private boolean providedRuleSatisfiesRequiredPart(Rule providedRule,
+			Entry<String, RulePartValues> requiredPart) {
 		String key = requiredPart.getKey();
 		if (!providedRule.containsKey(key)) {
 			return false;
 		}
-		Set<String> requiredValues = requiredPart.getValue();
-		Set<String> providedValues = providedRule.get(key);
+		RulePartValues requiredValues = requiredPart.getValue();
+		RulePartValues providedValues = providedRule.get(key);
 		return providedExistingValuesSatisfiesRequiredValue(requiredValues, providedValues);
 	}
 
-	private boolean providedExistingValuesSatisfiesRequiredValue(Set<String> requiredValues,
-			Set<String> providedValues) {
+	private boolean providedExistingValuesSatisfiesRequiredValue(RulePartValues requiredValues,
+			RulePartValues providedValues) {
 		return requiredValues.stream()
 				.allMatch(requiredValue -> providedValuesSatisfiesRequiredValue(providedValues,
 						requiredValue));
 	}
 
-	private boolean providedValuesSatisfiesRequiredValue(Set<String> providedValues,
+	private boolean providedValuesSatisfiesRequiredValue(RulePartValues providedValues,
 			String requiredValue) {
 		return providedValues.stream().anyMatch(
 				providedValue -> providedValueSatisfiesRequiredValue(providedValue, requiredValue));

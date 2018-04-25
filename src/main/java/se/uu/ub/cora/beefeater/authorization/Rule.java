@@ -19,6 +19,8 @@
 
 package se.uu.ub.cora.beefeater.authorization;
 
-public class Rule {
+import java.util.HashMap;
+
+public class Rule extends HashMap<String, RulePartValues> {
 
 }

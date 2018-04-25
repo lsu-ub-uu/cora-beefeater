@@ -20,11 +20,10 @@
 package se.uu.ub.cora.beefeater;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import se.uu.ub.cora.beefeater.authorization.Rule;
 
 public interface Authorizator {
 
-	boolean providedRulesSatisfiesRequiredRules(List<Map<String, Set<String>>> providedRules,
-			List<Map<String, Set<String>>> requiredRules);
+	boolean providedRulesSatisfiesRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
 }
