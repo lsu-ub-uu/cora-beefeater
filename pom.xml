@@ -23,11 +23,11 @@
 	<parent>
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
-        <version>0.8.6</version>
+        <version>0.9.0</version>
 	</parent>
 
 	<artifactId>beefeater</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Beefeater</name>
 
