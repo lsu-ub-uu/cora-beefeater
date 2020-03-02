@@ -59,11 +59,11 @@ public class AuthorizatorImp implements Authorizator {
 	private boolean providedRuleSatisfiesRequiredPart(Rule providedRule,
 			Entry<String, RulePartValues> requiredPart) {
 		String key = requiredPart.getKey();
-		if (!providedRule.containsKey(key)) {
+		if (!providedRule.containsRulePart(key)) {
 			return false;
 		}
 		RulePartValues requiredValues = requiredPart.getValue();
-		RulePartValues providedValues = providedRule.get(key);
+		RulePartValues providedValues = providedRule.getRulePartValuesForKey(key);
 		return providedExistingValuesSatisfiesRequiredValue(requiredValues, providedValues);
 	}
 

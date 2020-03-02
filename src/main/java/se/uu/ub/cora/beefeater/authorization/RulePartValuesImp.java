@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Uppsala University Library
+ * Copyright 2018 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,15 +16,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.uu.ub.cora.beefeater.authorization;
 
-import org.testng.annotations.Test;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.Stream;
 
-public class RuleTest {
-	@Test
-	public void test() {
-		RuleImp rule = new RuleImp();
+public class RulePartValuesImp implements RulePartValues {
 
+	Set<String> rulePartValues = new HashSet<>();
+
+	@Override
+	public Stream<String> stream() {
+		return rulePartValues.stream();
 	}
+
+	@Override
+	public void add(String value) {
+		rulePartValues.add(value);
+	}
+
+	@Override
+	public int size() {
+		return rulePartValues.size();
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return rulePartValues.iterator();
+	}
+
+	@Override
+	public boolean contains(String key) {
+		return rulePartValues.contains(key);
+	}
+
 }
