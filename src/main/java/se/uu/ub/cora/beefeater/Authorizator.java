@@ -26,4 +26,6 @@ import se.uu.ub.cora.beefeater.authorization.Rule;
 public interface Authorizator {
 
 	boolean providedRulesSatisfiesRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
+
+	List<Rule> providedRulesMatchRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
 }

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-//public class RuleImp extends HashMap<String, RulePartValues> implements Rule {
 public class RuleImp implements Rule {
 	RuleParts ruleParts = new RulePartsImp();
 	List<String> readRecordPartPermissions;
@@ -51,13 +50,11 @@ public class RuleImp implements Rule {
 
 	@Override
 	public Set<String> keySet() {
-		// TODO Auto-generated method stub
 		return ruleParts.keySet();
 	}
 
 	@Override
 	public int getNumberOfRuleParts() {
-		// TODO Auto-generated method stub
 		return ruleParts.size();
 	}
 

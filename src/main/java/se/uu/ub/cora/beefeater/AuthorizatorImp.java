@@ -21,6 +21,7 @@ package se.uu.ub.cora.beefeater;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import se.uu.ub.cora.beefeater.authorization.Rule;
 import se.uu.ub.cora.beefeater.authorization.RulePartValues;
@@ -98,4 +99,71 @@ public class AuthorizatorImp implements Authorizator {
 				providedValue.length() - WILDCARD.length());
 		return requiredValue.startsWith(providedValueWithoutWildcard);
 	}
+
+	@Override
+	public List<Rule> providedRulesMatchRequiredRules(List<Rule> providedRules,
+			List<Rule> requiredRules) {
+		return providedRulesMatchExistingRequiredRules(providedRules, requiredRules);
+	}
+
+	private List<Rule> providedRulesMatchExistingRequiredRules(List<Rule> providedRules,
+			List<Rule> requiredRules) {
+		// return requiredRules.stream().anyMatch(
+		// requiredRule -> providedRulesMatchRequiredRule(requiredRule, providedRules));
+		return providedRules.stream()
+				.filter(providedRule -> providedRulesMatchRequiredRule(providedRule, requiredRules))
+				.collect(Collectors.toList());
+	}
+
+	private boolean providedRulesMatchRequiredRule(Rule providedRule, List<Rule> requiredRules) {
+		return requiredRules.stream().anyMatch(
+				requiredRule -> providedRuleMatchRequiredRule(requiredRule, providedRule));
+	}
+
+	private boolean providedRuleMatchRequiredRule(Rule requiredRule, Rule providedRule) {
+		return requiredRule.entrySet().stream().allMatch(
+				requiredPart -> providedRuleSatisfiesRequiredPart(providedRule, requiredPart));
+	}
+
+	// private boolean providedRuleMatchRequiredPart(Rule providedRule,
+	// Entry<String, RulePartValues> requiredPart) {
+	// String key = requiredPart.getKey();
+	// if (!providedRule.containsRulePart(key)) {
+	// return false;
+	// }
+	// RulePartValues requiredValues = requiredPart.getValue();
+	// RulePartValues providedValues = providedRule.getRulePartValuesForKey(key);
+	// return providedExistingValuesMatchRequiredValue(requiredValues, providedValues);
+	// }
+	//
+	// private boolean providedExistingValuesMatchRequiredValue(RulePartValues requiredValues,
+	// RulePartValues providedValues) {
+	// return requiredValues.stream().allMatch(
+	// requiredValue -> providedValuesMatchRequiredValue(providedValues, requiredValue));
+	// }
+	//
+	// private boolean providedValuesMatchRequiredValue(RulePartValues providedValues,
+	// String requiredValue) {
+	// return providedValues.stream().anyMatch(
+	// providedValue -> providedValueMatchRequiredValue(providedValue, requiredValue));
+	// }
+	//
+	// private boolean providedValueMatchRequiredValue(String providedValue, String requiredValue) {
+	// if (isWildcardValue(providedValue)) {
+	// return providedValueMatchRequiredValueAsStartOfString(providedValue, requiredValue);
+	// }
+	// return requiredValue.equals(providedValue);
+	// }
+	//
+	// // private boolean isWildcardValue(String providedValue) {
+	// // return providedValue.endsWith(WILDCARD);
+	// // }
+	//
+	// private boolean providedValueMatchRequiredValueAsStartOfString(String providedValue,
+	// String requiredValue) {
+	// String providedValueWithoutWildcard = providedValue.substring(0,
+	// providedValue.length() - WILDCARD.length());
+	// return requiredValue.startsWith(providedValueWithoutWildcard);
+	// }
+
 }
