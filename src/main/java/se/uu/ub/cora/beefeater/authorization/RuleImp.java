@@ -19,14 +19,15 @@
 
 package se.uu.ub.cora.beefeater.authorization;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 public class RuleImp implements Rule {
 	RuleParts ruleParts = new RulePartsImp();
-	List<String> readRecordPartPermissions;
-	List<String> writeRecordPartPermissions;
+	List<String> readRecordPartPermissions = new ArrayList<>();
+	List<String> writeRecordPartPermissions = new ArrayList<>();
 
 	@Override
 	public boolean containsRulePart(String key) {
@@ -56,6 +57,22 @@ public class RuleImp implements Rule {
 	@Override
 	public int getNumberOfRuleParts() {
 		return ruleParts.size();
+	}
+
+	public List<String> getReadRecordPartPermissions() {
+		return readRecordPartPermissions;
+	}
+
+	public void addReadRecordPartPermissions(String readPermission) {
+		readRecordPartPermissions.add(readPermission);
+	}
+
+	public List<String> getWriteRecordPartPermissions() {
+		return writeRecordPartPermissions;
+	}
+
+	public void addWriteRecordPartPermissions(String writePermission) {
+		writeRecordPartPermissions.add(writePermission);
 	}
 
 }
