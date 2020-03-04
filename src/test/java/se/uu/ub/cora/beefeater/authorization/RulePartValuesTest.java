@@ -18,41 +18,33 @@
  */
 package se.uu.ub.cora.beefeater.authorization;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-public class RulePartsImp implements RuleParts {
-	HashMap<String, RulePartValues> ruleParts = new HashMap<>();
+import java.util.stream.Stream;
 
-	@Override
-	public boolean containsKey(String key) {
-		return ruleParts.containsKey(key);
+import org.testng.annotations.Test;
+
+public class RulePartValuesTest {
+
+	@Test
+	public void testInit() {
+		RulePartValues rulePartValues = new RulePartValuesImp();
+		assertEquals(rulePartValues.size(), 0);
 	}
 
-	@Override
-	public RulePartValues get(String key) {
-		return ruleParts.get(key);
-	}
+	@Test
+	public void testRulePartValues() {
+		RulePartValues rulePartValues = new RulePartValuesImp();
+		rulePartValues.add("someRulePartValue");
 
-	@Override
-	public Set<Entry<String, RulePartValues>> entrySet() {
-		return ruleParts.entrySet();
-	}
+		assertEquals(rulePartValues.size(), 1);
+		assertTrue(rulePartValues.contains("someRulePartValue"));
+		assertEquals(rulePartValues.iterator().next(), "someRulePartValue");
 
-	@Override
-	public void put(String key, RulePartValues set) {
-		ruleParts.put(key, set);
-	}
+		Stream<String> stream = rulePartValues.stream();
+		assertEquals(stream.count(), 1);
 
-	@Override
-	public Set<String> keySet() {
-		return ruleParts.keySet();
-	}
-
-	@Override
-	public int size() {
-		return ruleParts.size();
 	}
 
 }
