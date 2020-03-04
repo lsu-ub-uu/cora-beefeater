@@ -38,26 +38,26 @@ public class RulePartsTest {
 		ruleParts = new RulePartsImp();
 		values = new RulePartValuesImp();
 		values.add("someValue");
-		ruleParts.put("someRulePartId", values);
+		ruleParts.add("someRulePartId", values);
 	}
 
 	@Test
 	public void testInit() {
 		ruleParts = new RulePartsImp();
-		assertEquals(ruleParts.size(), 0);
+		assertEquals(ruleParts.numberOfRuleParts(), 0);
 	}
 
 	@Test
 	public void testRuleParts() {
-		assertTrue(ruleParts.containsKey("someRulePartId"));
-		assertSame(ruleParts.get("someRulePartId"), values);
-		assertEquals(ruleParts.size(), 1);
+		assertTrue(ruleParts.containsPermissionKey("someRulePartId"));
+		assertSame(ruleParts.getValuesForPermissionKey("someRulePartId"), values);
+		assertEquals(ruleParts.numberOfRuleParts(), 1);
 	}
 
 	@Test
 	public void testRulePartsKeySet() {
-		assertEquals(ruleParts.keySet().size(), 1);
-		assertEquals(ruleParts.keySet().iterator().next(), "someRulePartId");
+		assertEquals(ruleParts.getAllPermissionKeys().size(), 1);
+		assertEquals(ruleParts.getAllPermissionKeys().iterator().next(), "someRulePartId");
 	}
 
 	@Test
