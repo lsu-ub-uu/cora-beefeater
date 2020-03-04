@@ -59,18 +59,22 @@ public class RuleImp implements Rule {
 		return ruleParts.size();
 	}
 
+	@Override
 	public List<String> getReadRecordPartPermissions() {
 		return readRecordPartPermissions;
 	}
 
+	@Override
 	public void addReadRecordPartPermissions(String readPermission) {
 		readRecordPartPermissions.add(readPermission);
 	}
 
+	@Override
 	public List<String> getWriteRecordPartPermissions() {
 		return writeRecordPartPermissions;
 	}
 
+	@Override
 	public void addWriteRecordPartPermissions(String writePermission) {
 		writeRecordPartPermissions.add(writePermission);
 	}
