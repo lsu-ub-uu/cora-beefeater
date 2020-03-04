@@ -31,12 +31,12 @@ public class RuleImp implements Rule {
 
 	@Override
 	public boolean containsRulePart(String key) {
-		return ruleParts.containsKey(key);
+		return ruleParts.containsPermissionKey(key);
 	}
 
 	@Override
 	public RulePartValues getRulePartValuesForKey(String key) {
-		return ruleParts.get(key);
+		return ruleParts.getValuesForPermissionKey(key);
 	}
 
 	@Override
@@ -46,17 +46,17 @@ public class RuleImp implements Rule {
 
 	@Override
 	public void addRulePart(String key, RulePartValues set) {
-		ruleParts.put(key, set);
+		ruleParts.add(key, set);
 	}
 
 	@Override
 	public Set<String> keySet() {
-		return ruleParts.keySet();
+		return ruleParts.getAllPermissionKeys();
 	}
 
 	@Override
 	public int getNumberOfRuleParts() {
-		return ruleParts.size();
+		return ruleParts.numberOfRuleParts();
 	}
 
 	@Override

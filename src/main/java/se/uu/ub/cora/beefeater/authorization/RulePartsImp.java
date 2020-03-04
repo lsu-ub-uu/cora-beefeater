@@ -26,13 +26,13 @@ public class RulePartsImp implements RuleParts {
 	HashMap<String, RulePartValues> ruleParts = new HashMap<>();
 
 	@Override
-	public boolean containsKey(String key) {
-		return ruleParts.containsKey(key);
+	public boolean containsPermissionKey(String permissionKey) {
+		return ruleParts.containsKey(permissionKey);
 	}
 
 	@Override
-	public RulePartValues get(String key) {
-		return ruleParts.get(key);
+	public RulePartValues getValuesForPermissionKey(String permissionKey) {
+		return ruleParts.get(permissionKey);
 	}
 
 	@Override
@@ -41,17 +41,17 @@ public class RulePartsImp implements RuleParts {
 	}
 
 	@Override
-	public void put(String key, RulePartValues set) {
-		ruleParts.put(key, set);
+	public void add(String permissionKey, RulePartValues values) {
+		ruleParts.put(permissionKey, values);
 	}
 
 	@Override
-	public Set<String> keySet() {
+	public Set<String> getAllPermissionKeys() {
 		return ruleParts.keySet();
 	}
 
 	@Override
-	public int size() {
+	public int numberOfRuleParts() {
 		return ruleParts.size();
 	}
 

@@ -5,16 +5,16 @@ import java.util.Set;
 
 public interface RuleParts {
 
-	boolean containsKey(String key);
+	boolean containsPermissionKey(String key);
 
-	RulePartValues get(String key);
+	RulePartValues getValuesForPermissionKey(String key);
 
 	Set<Entry<String, RulePartValues>> entrySet();
 
-	void put(String key, RulePartValues set);
+	void add(String key, RulePartValues set);
 
-	Set<String> keySet();
+	Set<String> getAllPermissionKeys();
 
-	int size();
+	int numberOfRuleParts();
 
 }
