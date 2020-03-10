@@ -108,8 +108,6 @@ public class AuthorizatorImp implements Authorizator {
 
 	private List<Rule> providedRulesMatchExistingRequiredRules(List<Rule> providedRules,
 			List<Rule> requiredRules) {
-		// return requiredRules.stream().anyMatch(
-		// requiredRule -> providedRulesMatchRequiredRule(requiredRule, providedRules));
 		return providedRules.stream()
 				.filter(providedRule -> providedRulesMatchRequiredRule(providedRule, requiredRules))
 				.collect(Collectors.toList());
@@ -124,46 +122,4 @@ public class AuthorizatorImp implements Authorizator {
 		return requiredRule.entrySet().stream().allMatch(
 				requiredPart -> providedRuleSatisfiesRequiredPart(providedRule, requiredPart));
 	}
-
-	// private boolean providedRuleMatchRequiredPart(Rule providedRule,
-	// Entry<String, RulePartValues> requiredPart) {
-	// String key = requiredPart.getKey();
-	// if (!providedRule.containsRulePart(key)) {
-	// return false;
-	// }
-	// RulePartValues requiredValues = requiredPart.getValue();
-	// RulePartValues providedValues = providedRule.getRulePartValuesForKey(key);
-	// return providedExistingValuesMatchRequiredValue(requiredValues, providedValues);
-	// }
-	//
-	// private boolean providedExistingValuesMatchRequiredValue(RulePartValues requiredValues,
-	// RulePartValues providedValues) {
-	// return requiredValues.stream().allMatch(
-	// requiredValue -> providedValuesMatchRequiredValue(providedValues, requiredValue));
-	// }
-	//
-	// private boolean providedValuesMatchRequiredValue(RulePartValues providedValues,
-	// String requiredValue) {
-	// return providedValues.stream().anyMatch(
-	// providedValue -> providedValueMatchRequiredValue(providedValue, requiredValue));
-	// }
-	//
-	// private boolean providedValueMatchRequiredValue(String providedValue, String requiredValue) {
-	// if (isWildcardValue(providedValue)) {
-	// return providedValueMatchRequiredValueAsStartOfString(providedValue, requiredValue);
-	// }
-	// return requiredValue.equals(providedValue);
-	// }
-	//
-	// // private boolean isWildcardValue(String providedValue) {
-	// // return providedValue.endsWith(WILDCARD);
-	// // }
-	//
-	// private boolean providedValueMatchRequiredValueAsStartOfString(String providedValue,
-	// String requiredValue) {
-	// String providedValueWithoutWildcard = providedValue.substring(0,
-	// providedValue.length() - WILDCARD.length());
-	// return requiredValue.startsWith(providedValueWithoutWildcard);
-	// }
-
 }
