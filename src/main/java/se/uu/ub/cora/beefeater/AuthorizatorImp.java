@@ -21,6 +21,7 @@ package se.uu.ub.cora.beefeater;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import se.uu.ub.cora.beefeater.authorization.Rule;
 import se.uu.ub.cora.beefeater.authorization.RulePartValues;
@@ -59,11 +60,11 @@ public class AuthorizatorImp implements Authorizator {
 	private boolean providedRuleSatisfiesRequiredPart(Rule providedRule,
 			Entry<String, RulePartValues> requiredPart) {
 		String key = requiredPart.getKey();
-		if (!providedRule.containsKey(key)) {
+		if (!providedRule.containsRulePart(key)) {
 			return false;
 		}
 		RulePartValues requiredValues = requiredPart.getValue();
-		RulePartValues providedValues = providedRule.get(key);
+		RulePartValues providedValues = providedRule.getRulePartValuesForKey(key);
 		return providedExistingValuesSatisfiesRequiredValue(requiredValues, providedValues);
 	}
 
@@ -97,5 +98,28 @@ public class AuthorizatorImp implements Authorizator {
 		String providedValueWithoutWildcard = providedValue.substring(0,
 				providedValue.length() - WILDCARD.length());
 		return requiredValue.startsWith(providedValueWithoutWildcard);
+	}
+
+	@Override
+	public List<Rule> providedRulesMatchRequiredRules(List<Rule> providedRules,
+			List<Rule> requiredRules) {
+		return providedRulesMatchExistingRequiredRules(providedRules, requiredRules);
+	}
+
+	private List<Rule> providedRulesMatchExistingRequiredRules(List<Rule> providedRules,
+			List<Rule> requiredRules) {
+		return providedRules.stream()
+				.filter(providedRule -> providedRulesMatchRequiredRule(providedRule, requiredRules))
+				.collect(Collectors.toList());
+	}
+
+	private boolean providedRulesMatchRequiredRule(Rule providedRule, List<Rule> requiredRules) {
+		return requiredRules.stream().anyMatch(
+				requiredRule -> providedRuleMatchRequiredRule(requiredRule, providedRule));
+	}
+
+	private boolean providedRuleMatchRequiredRule(Rule requiredRule, Rule providedRule) {
+		return requiredRule.entrySet().stream().allMatch(
+				requiredPart -> providedRuleSatisfiesRequiredPart(providedRule, requiredPart));
 	}
 }

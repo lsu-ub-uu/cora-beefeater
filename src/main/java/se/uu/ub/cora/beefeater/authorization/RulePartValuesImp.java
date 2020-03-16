@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2016 Uppsala University Library
+ * Copyright 2018 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,16 +16,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.uu.ub.cora.beefeater.authorization;
 
-package se.uu.ub.cora.beefeater;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.Stream;
 
-import java.util.List;
+public class RulePartValuesImp implements RulePartValues {
 
-import se.uu.ub.cora.beefeater.authorization.Rule;
+	Set<String> rulePartValues = new HashSet<>();
 
-public interface Authorizator {
+	@Override
+	public Stream<String> stream() {
+		return rulePartValues.stream();
+	}
 
-	boolean providedRulesSatisfiesRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
+	@Override
+	public void add(String value) {
+		rulePartValues.add(value);
+	}
 
-	List<Rule> providedRulesMatchRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
+	@Override
+	public int size() {
+		return rulePartValues.size();
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return rulePartValues.iterator();
+	}
+
+	@Override
+	public boolean contains(String key) {
+		return rulePartValues.contains(key);
+	}
+
 }

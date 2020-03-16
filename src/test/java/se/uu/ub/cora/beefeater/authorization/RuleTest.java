@@ -19,12 +19,68 @@
 
 package se.uu.ub.cora.beefeater.authorization;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.testng.annotations.Test;
 
 public class RuleTest {
-	@Test
-	public void test() {
-		Rule rule = new Rule();
 
+	@Test
+	public void testInit() {
+		RuleImp rule = new RuleImp();
+		assertTrue(rule.getReadRecordPartPermissions().isEmpty());
+		assertTrue(rule.getWriteRecordPartPermissions().isEmpty());
+		assertEquals(rule.getNumberOfRuleParts(), 0);
 	}
+
+	@Test
+	public void testRulePart() {
+		RuleImp rule = new RuleImp();
+		RulePartValuesImp rulePartValue = new RulePartValuesImp();
+		rulePartValue.add("someRulePartValue");
+		rule.addRulePart("someRulePart", rulePartValue);
+
+		assertEquals(rule.getNumberOfRuleParts(), 1);
+		assertTrue(rule.containsRulePart("someRulePart"));
+		assertFalse(rule.containsRulePart("someNOTEXISTINGRulePart"));
+		assertSame(rule.getRulePartValuesForKey("someRulePart"), rulePartValue);
+		assertTrue(rule.keySet().contains("someRulePart"));
+		assertEquals(rule.keySet().size(), 1);
+		assertCorrectEntrySet(rule, rulePartValue);
+	}
+
+	private void assertCorrectEntrySet(RuleImp rule, RulePartValuesImp rulePartValue) {
+		Set<Entry<String, RulePartValues>> entrySet = rule.entrySet();
+		assertEquals(entrySet.size(), 1);
+		Entry<String, RulePartValues> firstEntry = entrySet.iterator().next();
+		assertEquals(firstEntry.getKey(), "someRulePart");
+		assertSame(firstEntry.getValue(), rulePartValue);
+	}
+
+	@Test
+	public void testReadRecordPartPermissions() {
+		RuleImp rule = new RuleImp();
+		rule.addReadRecordPartPermissions("someReadPermission");
+		rule.addReadRecordPartPermissions("someSecondReadPermission");
+		assertEquals(rule.getReadRecordPartPermissions().size(), 2);
+		assertEquals(rule.getReadRecordPartPermissions().get(0), "someReadPermission");
+		assertEquals(rule.getReadRecordPartPermissions().get(1), "someSecondReadPermission");
+	}
+
+	@Test
+	public void testWriteRecordPartPermissions() {
+		RuleImp rule = new RuleImp();
+		rule.addWriteRecordPartPermissions("someWritePermission");
+		rule.addWriteRecordPartPermissions("someSecondWritePermission");
+		assertEquals(rule.getWriteRecordPartPermissions().size(), 2);
+		assertEquals(rule.getWriteRecordPartPermissions().get(0), "someWritePermission");
+		assertEquals(rule.getWriteRecordPartPermissions().get(1), "someSecondWritePermission");
+	}
+
 }

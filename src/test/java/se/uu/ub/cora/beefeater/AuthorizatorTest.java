@@ -19,6 +19,7 @@
 
 package se.uu.ub.cora.beefeater;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -29,7 +30,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.beefeater.authorization.Rule;
+import se.uu.ub.cora.beefeater.authorization.RuleImp;
 import se.uu.ub.cora.beefeater.authorization.RulePartValues;
+import se.uu.ub.cora.beefeater.authorization.RulePartValuesImp;
 
 public class AuthorizatorTest {
 	private List<Rule> providedRules;
@@ -46,14 +49,14 @@ public class AuthorizatorTest {
 
 	@Test
 	public void testExactMatch() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.read");
 		createRulePart(providedRule, "organisation", "system.se.uu");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "delete", "system.existing");
 		createRulePart(providedRule, "publish", "system.notpublished");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.read");
 		createRulePart(requiredRule, "organisation", "system.se.uu");
 		createRulePart(requiredRule, "recordType", "system.book");
@@ -61,18 +64,20 @@ public class AuthorizatorTest {
 		createRulePart(requiredRule, "publish", "system.notpublished");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testNoPartsMatch() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.read");
 		createRulePart(providedRule, "organisation", "system.se.uu");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "delete", "system.existing");
 		createRulePart(providedRule, "publish", "system.notpublished");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.create");
 		createRulePart(requiredRule, "organisation", "system.no");
 		createRulePart(requiredRule, "recordType", "system.person");
@@ -80,253 +85,370 @@ public class AuthorizatorTest {
 		createRulePart(requiredRule, "publish", "system.published");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testNoRules() {
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testNoRequiredRule() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testNoProvidedRule() {
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testRequiredRuleHasDifferentKeyThanProvided() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart2", "system.x");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testRequiredRuleHasDifferentValueThanProvided() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "systom.x");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testRequiredRuleHasProvidedWildcard() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x*");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.xxx.yy");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testRequiredRuleHasDifferentKeyThanProvidedWildcard() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart2", "system.x*");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.xxx.yy");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testRequiredRuleHasDifferentValueThanProvidedWildcard() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x*");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "systom.xxx.yy");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testRequiredRuleHasOneLessPartThanProvided2() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 		createRulePart(providedRule, "rulePart2", "system.y");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testRequiredRuleHasOneMorePartThanProvided() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 		createRulePart(requiredRule, "rulePart2", "system.y");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testProvidedRuleHasOneMoreValueThanRequired() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.y", "system.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testRequiredRuleHasOneMoreValueThanProvided() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x", "system.y");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testProvidedHasOneMoreRuleThanRequired() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.y");
-		Rule providedRule2 = createProvidedRule();
+		RuleImp providedRule2 = createProvidedRule();
 		createRulePart(providedRule2, "rulePart1", "system.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testRequiredHasOneMoreRuleThanProvided() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "rulePart1", "system.y");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "rulePart1", "system.x");
-		Rule requiredRule2 = createRequiredRule();
+		RuleImp requiredRule2 = createRequiredRule();
 		createRulePart(requiredRule2, "rulePart1", "system.y");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testSeriesExampleNotSatisfied() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.");
 		createRulePart(providedRule, "recordType", "system.");
 		createRulePart(providedRule, "serie", "system.se.uu.a");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "serie", "system.");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
 	}
 
 	@Test
 	public void testSeriesExampleSatisfied() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.*");
 		createRulePart(providedRule, "serie", "system.se.uu.a");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "serie", "system.se.uu.a");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testUserIdExampleSatisfiedAdmin() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.*");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "userId", "system.uu.y");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testUserIdExampleSatisfiedUser() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.*");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.uu.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "userId", "system.uu.x");
 
 		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
 	}
 
 	@Test
 	public void testUserIdExampleNotSatisfiedUser() {
-		Rule providedRule = createProvidedRule();
+		RuleImp providedRule = createProvidedRule();
 		createRulePart(providedRule, "action", "system.");
 		createRulePart(providedRule, "recordType", "system.book");
 		createRulePart(providedRule, "userId", "system.uu.x");
 
-		Rule requiredRule = createRequiredRule();
+		RuleImp requiredRule = createRequiredRule();
 		createRulePart(requiredRule, "action", "system.update");
 		createRulePart(requiredRule, "recordType", "system.book");
 		createRulePart(requiredRule, "userId", "system.uu.y");
 
 		assertFalse(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 0);
+	}
+
+	@Test
+	public void testProvidedHasOneMoreRuleThanRequiredBothMatch() {
+		RuleImp providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.x");
+		RuleImp providedRule2 = createProvidedRule();
+		createRulePart(providedRule2, "rulePart1", "system.x");
+
+		RuleImp requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "system.x");
+
+		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 2);
+	}
+
+	@Test
+	public void testProvidedHasTwoMoreRuleThanRequiredTwoMatch() {
+		RuleImp providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.x");
+		RuleImp providedRule2 = createProvidedRule();
+		createRulePart(providedRule2, "rulePart1", "system.x");
+		RuleImp providedRule3 = createProvidedRule();
+		createRulePart(providedRule3, "rulePart1", "system.y");
+
+		RuleImp requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "system.x");
+
+		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 2);
+		assertTrue(matchedRules.contains(providedRule));
+		assertTrue(matchedRules.contains(providedRule2));
+	}
+
+	@Test
+	public void testProvidedRuleHasTwoMoreRulesThanRequiredOneMoreValueThanRequiredTwoMatch() {
+		RuleImp providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.y", "system.x");
+		RuleImp providedRule2 = createProvidedRule();
+		createRulePart(providedRule2, "rulePart1", "system.n", "system.n");
+		RuleImp providedRule3 = createProvidedRule();
+		createRulePart(providedRule3, "rulePart1", "system.z", "system.x");
+
+		RuleImp requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "system.x");
+
+		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 2);
+		assertTrue(matchedRules.contains(providedRule));
+		assertTrue(matchedRules.contains(providedRule3));
+	}
+
+	@Test
+	public void testProvidedRuleHasTwoMoreRulesThanRequiredOneMoreValueThanRequiredTwoMatch2() {
+		RuleImp providedRule = createProvidedRule();
+		createRulePart(providedRule, "rulePart1", "system.y", "system.x");
+		RuleImp providedRule2 = createProvidedRule();
+		createRulePart(providedRule2, "rulePart1", "system.n", "system.n");
+		RuleImp providedRule3 = createProvidedRule();
+		createRulePart(providedRule3, "rulePart1", "system.z", "system.x");
+		createRulePart(providedRule3, "recordType", "system.z", "system.x");
+
+		RuleImp requiredRule = createRequiredRule();
+		createRulePart(requiredRule, "rulePart1", "system.x");
+		createRulePart(requiredRule, "recordType", "system.z", "system.x");
+
+		assertTrue(providedRulesSatisfiesRequiredRules());
+		List<Rule> matchedRules = providedRulesMatchRequiredRules();
+		assertEquals(matchedRules.size(), 1);
+		assertTrue(matchedRules.contains(providedRule3));
 	}
 
 	private boolean providedRulesSatisfiesRequiredRules() {
 		return authorizator.providedRulesSatisfiesRequiredRules(providedRules, requiredRules);
 	}
 
-	private Rule createRequiredRule() {
-		Rule requiredRule = new Rule();
+	private List<Rule> providedRulesMatchRequiredRules() {
+		return authorizator.providedRulesMatchRequiredRules(providedRules, requiredRules);
+	}
+
+	private RuleImp createRequiredRule() {
+		RuleImp requiredRule = new RuleImp();
 		requiredRules.add(requiredRule);
 		return requiredRule;
 	}
 
-	private Rule createProvidedRule() {
-		Rule providedRule = new Rule();
+	private RuleImp createProvidedRule() {
+		RuleImp providedRule = new RuleImp();
 		providedRules.add(providedRule);
 		return providedRule;
 	}
 
 	private void createRulePart(Rule providedRule, String key, String... values) {
-		RulePartValues set = new RulePartValues();
+		RulePartValues set = new RulePartValuesImp();
 		for (String value : values) {
 			set.add(value);
 		}
-		providedRule.put(key, set);
+		providedRule.addRulePart(key, set);
 	}
 
 }
