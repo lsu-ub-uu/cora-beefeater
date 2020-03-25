@@ -66,8 +66,8 @@ public class RuleTest {
 	@Test
 	public void testReadRecordPartPermissions() {
 		RuleImp rule = new RuleImp();
-		rule.addReadRecordPartPermissions("someReadPermission");
-		rule.addReadRecordPartPermissions("someSecondReadPermission");
+		rule.addReadRecordPartPermission("someReadPermission");
+		rule.addReadRecordPartPermission("someSecondReadPermission");
 		assertEquals(rule.getReadRecordPartPermissions().size(), 2);
 		assertEquals(rule.getReadRecordPartPermissions().get(0), "someReadPermission");
 		assertEquals(rule.getReadRecordPartPermissions().get(1), "someSecondReadPermission");
@@ -76,8 +76,8 @@ public class RuleTest {
 	@Test
 	public void testWriteRecordPartPermissions() {
 		RuleImp rule = new RuleImp();
-		rule.addWriteRecordPartPermissions("someWritePermission");
-		rule.addWriteRecordPartPermissions("someSecondWritePermission");
+		rule.addWriteRecordPartPermission("someWritePermission");
+		rule.addWriteRecordPartPermission("someSecondWritePermission");
 		assertEquals(rule.getWriteRecordPartPermissions().size(), 2);
 		assertEquals(rule.getWriteRecordPartPermissions().get(0), "someWritePermission");
 		assertEquals(rule.getWriteRecordPartPermissions().get(1), "someSecondWritePermission");

@@ -65,7 +65,7 @@ public class RuleImp implements Rule {
 	}
 
 	@Override
-	public void addReadRecordPartPermissions(String readPermission) {
+	public void addReadRecordPartPermission(String readPermission) {
 		readRecordPartPermissions.add(readPermission);
 	}
 
@@ -75,7 +75,7 @@ public class RuleImp implements Rule {
 	}
 
 	@Override
-	public void addWriteRecordPartPermissions(String writePermission) {
+	public void addWriteRecordPartPermission(String writePermission) {
 		writeRecordPartPermissions.add(writePermission);
 	}
 
