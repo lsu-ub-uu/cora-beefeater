@@ -18,11 +18,11 @@ public interface Rule {
 
 	int getNumberOfRuleParts();
 
-	void addWriteRecordPartPermissions(String writePermission);
+	void addWriteRecordPartPermission(String writePermission);
 
 	List<String> getWriteRecordPartPermissions();
 
-	void addReadRecordPartPermissions(String readPermission);
+	void addReadRecordPartPermission(String readPermission);
 
 	List<String> getReadRecordPartPermissions();
 
