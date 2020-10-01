@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Uppsala University Library
+ * Copyright 2016, 2020 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -27,13 +27,20 @@ import static org.testng.Assert.assertTrue;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class RuleTest {
 
+	private Rule rule;
+
+	@BeforeMethod
+	public void beforeMethod() {
+		rule = new RuleImp();
+	}
+
 	@Test
 	public void testInit() {
-		RuleImp rule = new RuleImp();
 		assertTrue(rule.getReadRecordPartPermissions().isEmpty());
 		assertTrue(rule.getWriteRecordPartPermissions().isEmpty());
 		assertEquals(rule.getNumberOfRuleParts(), 0);
@@ -41,7 +48,6 @@ public class RuleTest {
 
 	@Test
 	public void testRulePart() {
-		RuleImp rule = new RuleImp();
 		RulePartValuesImp rulePartValue = new RulePartValuesImp();
 		rulePartValue.add("someRulePartValue");
 		rule.addRulePart("someRulePart", rulePartValue);
@@ -55,7 +61,7 @@ public class RuleTest {
 		assertCorrectEntrySet(rule, rulePartValue);
 	}
 
-	private void assertCorrectEntrySet(RuleImp rule, RulePartValuesImp rulePartValue) {
+	private void assertCorrectEntrySet(Rule rule, RulePartValuesImp rulePartValue) {
 		Set<Entry<String, RulePartValues>> entrySet = rule.entrySet();
 		assertEquals(entrySet.size(), 1);
 		Entry<String, RulePartValues> firstEntry = entrySet.iterator().next();
@@ -64,8 +70,38 @@ public class RuleTest {
 	}
 
 	@Test
+	public void testAddIfKeyIsAbsent() throws Exception {
+		RulePartValues rulePartValues = new RulePartValuesImp();
+		String key = "someKey";
+		rule.addRulePartIfKeyIsAbsent(key, rulePartValues);
+
+		RulePartValues otherRulePartValues = new RulePartValuesImp();
+		rule.addRulePartIfKeyIsAbsent(key, otherRulePartValues);
+
+		assertRuleHasSameRulePartValuesForKey(rulePartValues, key);
+	}
+
+	private void assertRuleHasSameRulePartValuesForKey(RulePartValues rulePartValues, String key) {
+		assertEquals(rule.getNumberOfRuleParts(), 1);
+		assertTrue(rule.containsRulePart(key));
+		assertSame(rule.getRulePartValuesForKey(key), rulePartValues);
+	}
+
+	@Test
+	public void testAddIfKeyIsAbsentAfterAdd() throws Exception {
+		RulePartValues rulePartValues = new RulePartValuesImp();
+		String key = "someKey";
+
+		rule.addRulePart(key, rulePartValues);
+
+		RulePartValues otherRulePartValues = new RulePartValuesImp();
+		rule.addRulePartIfKeyIsAbsent(key, otherRulePartValues);
+
+		assertRuleHasSameRulePartValuesForKey(rulePartValues, key);
+	}
+
+	@Test
 	public void testReadRecordPartPermissions() {
-		RuleImp rule = new RuleImp();
 		rule.addReadRecordPartPermission("someReadPermission");
 		rule.addReadRecordPartPermission("someSecondReadPermission");
 		assertEquals(rule.getReadRecordPartPermissions().size(), 2);
@@ -75,7 +111,6 @@ public class RuleTest {
 
 	@Test
 	public void testWriteRecordPartPermissions() {
-		RuleImp rule = new RuleImp();
 		rule.addWriteRecordPartPermission("someWritePermission");
 		rule.addWriteRecordPartPermission("someSecondWritePermission");
 		assertEquals(rule.getWriteRecordPartPermissions().size(), 2);

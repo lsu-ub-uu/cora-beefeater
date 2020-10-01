@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Uppsala University Library
+ * Copyright 2016, 2020 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -47,6 +47,17 @@ public class RuleImp implements Rule {
 	@Override
 	public void addRulePart(String key, RulePartValues set) {
 		ruleParts.add(key, set);
+	}
+
+	@Override
+	public void addRulePartIfKeyIsAbsent(String key, RulePartValues rulePartValues) {
+		if (rulePartsDoesNotContainPermissionKey(key)) {
+			ruleParts.add(key, rulePartValues);
+		}
+	}
+
+	private boolean rulePartsDoesNotContainPermissionKey(String key) {
+		return !ruleParts.containsPermissionKey(key);
 	}
 
 	@Override
