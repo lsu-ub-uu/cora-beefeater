@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Uppsala University Library
+ * Copyright 2016, 2025 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -20,40 +20,72 @@
 package se.uu.ub.cora.beefeater.authentication;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class UserTest {
+
+	private User user;
+
+	@BeforeMethod
+	private void beforeMethod() {
+		user = new User("someUserId");
+
+	}
+
 	@Test
 	public void init() {
-		String id = "someUserId";
-		User user = new User(id);
 		assertEquals(user.id, "someUserId");
 	}
 
 	@Test
 	public void testLoginInfo() {
-		String id = "122345";
-		User user = new User(id);
-		user.loginId = "someUserId";
+		user.loginId = "someLoginId";
 		user.loginDomain = "someDomain";
-		assertEquals(user.id, "122345");
-		assertEquals(user.loginId, "someUserId");
+
+		assertEquals(user.id, "someUserId");
+		assertEquals(user.loginId, "someLoginId");
 		assertEquals(user.loginDomain, "someDomain");
 	}
 
 	@Test
 	public void testRoleSet() {
-		String id = "122345";
-		User user = new User(id);
 		user.roles.add("admin");
 		user.roles.add("guest");
+
 		Set<String> roles = user.roles;
+
 		assertEquals(roles.size(), 2);
 		assertTrue(roles.contains("guest"));
 		assertTrue(roles.contains("admin"));
+	}
+
+	@Test
+	public void testUserActivation() {
+		user.active = true;
+		assertTrue(user.active);
+
+		user.active = false;
+		assertFalse(user.active);
+	}
+
+	@Test
+	public void testPermissionUnitIds() {
+		user.permissionUnitIds.add("permissionUnit1");
+		user.permissionUnitIds.add("permissionUnit2");
+
+		assertTrue(user.permissionUnitIds.contains("permissionUnit1"));
+		assertTrue(user.permissionUnitIds.contains("permissionUnit2"));
+
+		user.permissionUnitIds.remove("permissionUnit1");
+
+		assertEquals(user.permissionUnitIds.size(), 1);
+		assertFalse(user.permissionUnitIds.contains("permissionUnit1"));
+		assertTrue(user.permissionUnitIds.contains("permissionUnit2"));
 	}
 }

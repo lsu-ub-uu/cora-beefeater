@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Uppsala University Library
+ * Copyright 2016, 2025 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -20,13 +20,16 @@
 package se.uu.ub.cora.beefeater.authentication;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class User {
 
 	public final String id;
 	public String loginId;
+	public boolean active;
 	public String loginDomain;
+	public final Set<String> permissionUnitIds = new LinkedHashSet<>();
 	public final Set<String> roles = new HashSet<>();
 
 	public User(String id) {
