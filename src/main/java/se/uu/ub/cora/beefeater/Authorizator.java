@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2016 Uppsala University Library
+ * Copyright 2015, 2016, 2025 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -21,6 +21,7 @@ package se.uu.ub.cora.beefeater;
 
 import java.util.List;
 
+import se.uu.ub.cora.beefeater.authentication.User;
 import se.uu.ub.cora.beefeater.authorization.Rule;
 
 public interface Authorizator {
@@ -28,4 +29,21 @@ public interface Authorizator {
 	boolean providedRulesSatisfiesRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
 
 	List<Rule> providedRulesMatchRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
+
+	/**
+	 * userIsAuthorizedForActionOnRecordType is used to check if a user is allowed to perform any
+	 * action on the record based on user permissionsUnits, if recordType uses permissionUnits and
+	 * permissionUnit associated with the record.
+	 * 
+	 * @param user
+	 *            The {@link User} to check if is authorized.
+	 * @param recordTypeUsesPermissionUnit
+	 *            A boolean indicating if the recordType uses permissionUnit
+	 * @param recordPermissionUnit
+	 *            The permissionUnit associated with the record
+	 * @return a boolean, true if the user is allowed to regarding its permissionUnits.
+	 */
+	boolean checkUserIsAuthorizedForPemissionUnit(User user, boolean recordTypeUsesPermissionUnit,
+			String recordPermissionUnit);
+
 }

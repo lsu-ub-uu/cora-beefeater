@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import se.uu.ub.cora.beefeater.authentication.User;
 import se.uu.ub.cora.beefeater.authorization.Rule;
 import se.uu.ub.cora.beefeater.authorization.RulePartValues;
 
@@ -121,5 +122,17 @@ public class AuthorizatorImp implements Authorizator {
 	private boolean providedRuleMatchRequiredRule(Rule requiredRule, Rule providedRule) {
 		return requiredRule.entrySet().stream().allMatch(
 				requiredPart -> providedRuleSatisfiesRequiredPart(providedRule, requiredPart));
+	}
+
+	@Override
+	public boolean checkUserIsAuthorizedForPemissionUnit(User user,
+			boolean recordTypeUsesPermissionUnit, String recordPermissionUnit) {
+		return recordTypeUsesPermissionUnit
+				&& userHasSamePermissionUnitThanRecord(user, recordPermissionUnit);
+
+	}
+
+	private boolean userHasSamePermissionUnitThanRecord(User user, String recordPermissionUnit) {
+		return user.permissionUnitIds.contains(recordPermissionUnit);
 	}
 }

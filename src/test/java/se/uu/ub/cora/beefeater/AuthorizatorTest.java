@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2016 Uppsala University Library
+ * Copyright 2015, 2016, 2025 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -29,6 +29,7 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.beefeater.authentication.User;
 import se.uu.ub.cora.beefeater.authorization.Rule;
 import se.uu.ub.cora.beefeater.authorization.RuleImp;
 import se.uu.ub.cora.beefeater.authorization.RulePartValues;
@@ -451,4 +452,41 @@ public class AuthorizatorTest {
 		providedRule.addRulePart(key, set);
 	}
 
+	@Test
+	public void testCheckUserIsAuthorizedForPemissionUnit_recordTypeDoNotUsesPermissionUnit() {
+		User someUser = createUserWithPermissionUnits();
+
+		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser, false,
+				"permissionUnit001");
+
+		assertFalse(authorized);
+	}
+
+	private User createUserWithPermissionUnits(String... permissionUnits) {
+		User someUser = new User("someId");
+		for (String permissionUnit : permissionUnits) {
+			someUser.permissionUnitIds.add(permissionUnit);
+		}
+		return someUser;
+	}
+
+	@Test
+	public void testCheckUserIsAuthorizedForPemissionUnit_NotMatchingPermissions() {
+		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
+
+		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser, true,
+				"permissionUnit003");
+
+		assertFalse(authorized);
+	}
+
+	@Test
+	public void testCheckUserIsAuthorizedForPemissionUnit_MatchingPermissions() {
+		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
+
+		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser, true,
+				"permissionUnit002");
+
+		assertTrue(authorized);
+	}
 }
