@@ -424,6 +424,26 @@ public class AuthorizatorTest {
 		assertTrue(matchedRules.contains(providedRule3));
 	}
 
+	@Test
+	public void testCheckUserIsAuthorizedForPemissionUnit_NotMatchingPermissions() {
+		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
+
+		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser,
+				"permissionUnit003");
+
+		assertFalse(authorized);
+	}
+
+	@Test
+	public void testCheckUserIsAuthorizedForPemissionUnit_MatchingPermissions() {
+		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
+
+		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser,
+				"permissionUnit002");
+
+		assertTrue(authorized);
+	}
+
 	private boolean providedRulesSatisfiesRequiredRules() {
 		return authorizator.providedRulesSatisfiesRequiredRules(providedRules, requiredRules);
 	}
@@ -452,41 +472,11 @@ public class AuthorizatorTest {
 		providedRule.addRulePart(key, set);
 	}
 
-	@Test
-	public void testCheckUserIsAuthorizedForPemissionUnit_recordTypeDoNotUsesPermissionUnit() {
-		User someUser = createUserWithPermissionUnits();
-
-		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser, false,
-				"permissionUnit001");
-
-		assertFalse(authorized);
-	}
-
 	private User createUserWithPermissionUnits(String... permissionUnits) {
 		User someUser = new User("someId");
 		for (String permissionUnit : permissionUnits) {
 			someUser.permissionUnitIds.add(permissionUnit);
 		}
 		return someUser;
-	}
-
-	@Test
-	public void testCheckUserIsAuthorizedForPemissionUnit_NotMatchingPermissions() {
-		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
-
-		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser, true,
-				"permissionUnit003");
-
-		assertFalse(authorized);
-	}
-
-	@Test
-	public void testCheckUserIsAuthorizedForPemissionUnit_MatchingPermissions() {
-		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
-
-		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser, true,
-				"permissionUnit002");
-
-		assertTrue(authorized);
 	}
 }

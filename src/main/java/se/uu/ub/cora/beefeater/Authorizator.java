@@ -37,13 +37,10 @@ public interface Authorizator {
 	 * 
 	 * @param user
 	 *            The {@link User} to check if is authorized.
-	 * @param recordTypeUsesPermissionUnit
-	 *            A boolean indicating if the recordType uses permissionUnit
 	 * @param recordPermissionUnit
 	 *            The permissionUnit associated with the record
 	 * @return a boolean, true if the user is allowed to regarding its permissionUnits.
 	 */
-	boolean checkUserIsAuthorizedForPemissionUnit(User user, boolean recordTypeUsesPermissionUnit,
-			String recordPermissionUnit);
+	boolean checkUserIsAuthorizedForPemissionUnit(User user, String recordPermissionUnit);
 
 }

@@ -125,14 +125,7 @@ public class AuthorizatorImp implements Authorizator {
 	}
 
 	@Override
-	public boolean checkUserIsAuthorizedForPemissionUnit(User user,
-			boolean recordTypeUsesPermissionUnit, String recordPermissionUnit) {
-		return recordTypeUsesPermissionUnit
-				&& userHasSamePermissionUnitThanRecord(user, recordPermissionUnit);
-
-	}
-
-	private boolean userHasSamePermissionUnitThanRecord(User user, String recordPermissionUnit) {
+	public boolean checkUserIsAuthorizedForPemissionUnit(User user, String recordPermissionUnit) {
 		return user.permissionUnitIds.contains(recordPermissionUnit);
 	}
 }
