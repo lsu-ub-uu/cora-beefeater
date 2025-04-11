@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, 2016, 2018 Uppsala University Library
+ * Copyright 2015, 2016, 2018, 2025 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -125,7 +125,7 @@ public class AuthorizatorImp implements Authorizator {
 	}
 
 	@Override
-	public boolean checkUserIsAuthorizedForPemissionUnit(User user, String recordPermissionUnit) {
+	public boolean getUserIsAuthorizedForPemissionUnit(User user, String recordPermissionUnit) {
 		return user.permissionUnitIds.contains(recordPermissionUnit);
 	}
 }

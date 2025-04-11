@@ -31,16 +31,16 @@ public interface Authorizator {
 	List<Rule> providedRulesMatchRequiredRules(List<Rule> providedRules, List<Rule> requiredRules);
 
 	/**
-	 * userIsAuthorizedForActionOnRecordType is used to check if a user is allowed to perform any
-	 * action on the record based on user permissionsUnits, if recordType uses permissionUnits and
-	 * permissionUnit associated with the record.
+	 * getUserIsAuthorizedForPemissionUnit is used to get if a user is allowed to perform any data
+	 * altering actions on the record. The user is authorized if it has the provided records
+	 * permission unit in its list of permissionunits.
 	 * 
 	 * @param user
 	 *            The {@link User} to check if is authorized.
 	 * @param recordPermissionUnit
 	 *            The permissionUnit associated with the record
-	 * @return a boolean, true if the user is allowed to regarding its permissionUnits.
+	 * @return a boolean, true if the user is authorized
 	 */
-	boolean checkUserIsAuthorizedForPemissionUnit(User user, String recordPermissionUnit);
+	boolean getUserIsAuthorizedForPemissionUnit(User user, String recordPermissionUnit);
 
 }

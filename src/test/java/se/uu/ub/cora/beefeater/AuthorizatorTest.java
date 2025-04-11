@@ -425,20 +425,20 @@ public class AuthorizatorTest {
 	}
 
 	@Test
-	public void testCheckUserIsAuthorizedForPemissionUnit_NotMatchingPermissions() {
+	public void testGetUserIsAuthorizedForPemissionUnit_NotMatchingPermissions() {
 		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
 
-		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser,
+		boolean authorized = authorizator.getUserIsAuthorizedForPemissionUnit(someUser,
 				"permissionUnit003");
 
 		assertFalse(authorized);
 	}
 
 	@Test
-	public void testCheckUserIsAuthorizedForPemissionUnit_MatchingPermissions() {
+	public void testGetUserIsAuthorizedForPemissionUnit_MatchingPermissions() {
 		User someUser = createUserWithPermissionUnits("permissionUnit001", "permissionUnit002");
 
-		boolean authorized = authorizator.checkUserIsAuthorizedForPemissionUnit(someUser,
+		boolean authorized = authorizator.getUserIsAuthorizedForPemissionUnit(someUser,
 				"permissionUnit002");
 
 		assertTrue(authorized);
